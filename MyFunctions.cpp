@@ -825,3 +825,45 @@ bool isCollision(const AABB& aabb, const Segment segment)
 	}
 
 }
+
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t)
+{
+	Vector3 result;
+	result = v1  Multiply(t, v2 - v1);
+	return result;
+}
+
+Vector3 Bezier(const Vector3& p0, const Vector3& p1, const Vector3& p2, float t)
+{
+	Vector3 p0p1 = Lerp(p0, p1, t);
+	Vector3 p1p2 = Lerp(p1, p2, t);
+	Vector3 p = Lerp(p0p1, p1p2, t);
+
+	return p;
+}
+
+void DrawBezier(const Vector3& controlPoint0, const Vector3& controlPoint1, const Vector3& controlPoint2,
+                const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color)
+{
+	float num = 32;
+
+	for (int i = 0; i < num; ++i)
+	{
+		float t0 = i / float(num);
+		float t1 = (i + 1) / float(num);
+
+		//Vector3 bezier0 = Lerp(controlPoint0, controlPoint1, t0);
+		//Vector3 bezier1 = Lerp(controlPoint1, controlPoint2, t1);
+
+		Vector3 bezier0 = Bezier(controlPoint0, controlPoint1, controlPoint2, t0);
+		Vector3 bezier1 = Bezier(controlPoint0, controlPoint1, controlPoint2, t1);
+
+		Vector3 transform0 = Transform(bezier0, viewProjectionMatrix);
+		Vector3 transform1 = Transform(bezier1, viewProjectionMatrix);
+
+		Vector3 screenB0 = Transform(transform0, viewportMatrix);
+		Vector3 screenB1 = Transform(transform1, viewportMatrix);
+
+		Novice::DrawLine((int)screenB0.x, (int)screenB0.y, (int)screenB1.x, (int)screenB1.y, color);
+	}
+}

@@ -279,4 +279,10 @@ bool isCollision(const AABB& aabb, const Sphere& sphere);
 
 bool isCollision(const AABB& aabb, const Segment segment);
 
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+
+Vector3 Bezier(const Vector3& p0, const Vector3& p1, const Vector3& p2, float t);
+
+void DrawBezier(const Vector3& controlPoint0, const Vector3& controlPoint1, const Vector3& controlPoint2, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
+
 
